@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://www.thesportsdb.com/api/v1/json/3/all_leagues.php');
+        const json = await response.json();
+        setData(json.leagues);
+      } catch (error) {
+        console.log('Error fetching data:', error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  return(
+    <div>
+      <h1>League</h1>
+      {data.map((league) => (
+        <div key={league.idLeague}>
+          <p>{league.strLeague}</p>
+        </div>
+      ))}
     </div>
-  );
+  )
+  
 }
 
 export default App;
